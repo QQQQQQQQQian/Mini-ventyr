@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.14.36414.22 d17.14
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MiniÄventyr", "MiniÄventyr\MiniÄventyr.csproj", "{F1983F57-0C4A-4F3A-8703-C8ECBA870A7E}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{F1983F57-0C4A-4F3A-8703-C8ECBA870A7E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F1983F57-0C4A-4F3A-8703-C8ECBA870A7E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F1983F57-0C4A-4F3A-8703-C8ECBA870A7E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F1983F57-0C4A-4F3A-8703-C8ECBA870A7E}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {664F2219-1BD0-4BC6-9A76-FCD8CB719280}
+	EndGlobalSection
+EndGlobal
