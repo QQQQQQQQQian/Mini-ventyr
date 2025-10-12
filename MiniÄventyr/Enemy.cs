@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace MiniÄventyr
 {
-    public class Enemy
+    public class Enemy: IAttackable
     {
         public string Name { get; set; }
         public int HP { get; set; }
@@ -14,6 +14,7 @@ namespace MiniÄventyr
         public int Damage { get; set; }
         public int Level { get; set; }
         public int GoldReward { get; set; } 
+        public List<string> Loot { get; set; }
         public Enemy(string name, int hp,  int damage, int level, int goldReward)
         {
             Name = name;
@@ -22,6 +23,7 @@ namespace MiniÄventyr
             Level = level;
             Damage = damage;
             GoldReward = goldReward;
+            Loot = new List<string>();// Initialize loot list
         }
         public virtual string DeathQuote()
         {
@@ -42,7 +44,8 @@ namespace MiniÄventyr
 
             else
             {
-                Console.WriteLine($"{player.Name} has been defeated!");
+                player.HP = 0;
+                Console.WriteLine($"{Name} delivers a fatal blow! {player.Name}'s HP dropped to 0!");
             }
         }
        
@@ -52,6 +55,7 @@ namespace MiniÄventyr
     {
         public Rat() : base("Rat", 20, 5, 1, 10)
         {
+            Loot = new List<string> { "Rat Tail", "Cheese", "Small Claw" }; // Example loot item
         }
         public override string DeathQuote()
         {
@@ -62,6 +66,7 @@ namespace MiniÄventyr
     {
         public Goblin() : base("Goblin", 30, 8, 2, 15)
         {
+            Loot = new List<string> { "Goblin Ear" ,"Rusty Dagger"}; 
         }
         public override string DeathQuote()
         {
@@ -72,6 +77,7 @@ namespace MiniÄventyr
     {
         public Skeleton() : base("Skeleton", 40, 10, 3, 20)
         {
+            Loot = new List<string> { "Bone", "Rusty Sword" };
         }
         public override string DeathQuote()
         {
@@ -82,6 +88,7 @@ namespace MiniÄventyr
     {
         public Bandit() : base("Bandit", 50, 12, 4, 25)
         {
+            Loot = new List<string> { "Bandit Dagger" ,"Silver Coin"}; 
         }
         public override string DeathQuote()
         {
@@ -92,6 +99,7 @@ namespace MiniÄventyr
     {
         public Dragon() : base("Dragon", 70, 20, 5, 35)
         {
+            Loot = new List<string> { "Dragon Scale", "Treasure Chest" }; 
         }
         public override string DeathQuote()
         {

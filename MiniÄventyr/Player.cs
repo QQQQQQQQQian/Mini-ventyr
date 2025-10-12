@@ -10,6 +10,7 @@ namespace MiniÄventyr
         public int Damage { get; set; }
        public int Gold { get; set; }
 
+        public List<string> Inventory = new List<string>();
         public Player(string name, string role, int hp, int maxHp, int damage, int gold)
         {
             Name = name;
@@ -18,13 +19,14 @@ namespace MiniÄventyr
             MaxHP = maxHp;
             Damage = damage;
             Gold = gold;
+            Inventory = new List<string>();
         }
         public DateTime LastSkillTime;
         public int SkillCooldown = 60; // Cooldown in seconds   
         protected bool CanUseSkill()
         {
-            TimeSpan timeSinceLastUse = DateTime.Now - LastSkillTime;
-            return timeSinceLastUse.TotalSeconds >= SkillCooldown;
+            TimeSpan timeSinceLastUse = DateTime.Now - LastSkillTime; // Calculate time since last skill use
+            return timeSinceLastUse.TotalSeconds >= SkillCooldown; // Check if cooldown period has passed
         }
         protected void UpdateLastSkillTime()
         {
@@ -47,14 +49,14 @@ namespace MiniÄventyr
             if (enemy.HP <=0)
             {
                 enemy.HP = 0;
-                Console.WriteLine($"{enemy.Name} has been defeated!");
-                Console.WriteLine($"{enemy.DeathQuote()}");
-                Gold += enemy.GoldReward; // Reward for defeating an enemy
-                Console.WriteLine($"{Name} gained {enemy.GoldReward} gold, now has {Gold} Gold.");
+                
+
+                HandleEnemyDefeated(enemy); // Handle loot and gold reward
+
             }
             else
             {
-                               Console.WriteLine($"{Name} attacks {enemy.Name} for {dmg} damage! Now {enemy.Name} has {enemy.HP} HP.");
+                Console.WriteLine($"{Name} attacks {enemy.Name} for {dmg} damage! Now {enemy.Name} has {enemy.HP} HP.");
             }
             
         }
@@ -79,110 +81,37 @@ namespace MiniÄventyr
             Console.WriteLine($"{player.Name} rested and restored {actualRestored} HP. Current HP : {player.HP}/{player.MaxHP}");
 
         }
-       
-    }
-    class Warrior : Player
-    {
-        public int PowerStrikeDamage { get; set; } = 30;
-
-        public Warrior(string name) : base(name, "Warrior", 100, 100, 15, 50) { }
-
-
-        public void PowerStrike(Enemy enemy)
+        public void AddToInventory(string item)
         {
-            TimeSpan cooldown = DateTime.Now - LastSkillTime;
-
-            if (cooldown.TotalSeconds < SkillCooldown)
+            Inventory.Add(item);
+        }
+        public void ShowInventory()
+        {
+            Console.WriteLine("=== Inventory ===");
+            if (Inventory.Count == 0)
             {
-                int remaining = SkillCooldown - (int)cooldown.TotalSeconds;
-                Console.WriteLine($"Power Strike is on cooldown. Please wait {remaining} seconds.");
+                Console.WriteLine($"{Name}'s inventory is empty.");
                 return;
             }
-
-            enemy.HP -= PowerStrikeDamage;
-            if (enemy.HP < 0) enemy.HP = 0;
-            Console.WriteLine($"{Name} uses Power Strike on {enemy.Name} for {PowerStrikeDamage} damage! Now {enemy.Name}s HP is {enemy.HP}");
-
-            if (enemy.HP <= 0)
+            Console.WriteLine($"{Name}'s Inventory:");
+            foreach (var item in Inventory)
             {
-                Console.WriteLine($"{enemy.Name} has been defeated!");
-                Console.WriteLine(enemy.DeathQuote());
-                Gold += enemy.GoldReward; // Reward for defeating an enemy
-                Console.WriteLine($"{Name} gained {enemy.GoldReward} gold, now has {Gold} Gold.");
+                Console.WriteLine($"- {item}");
             }
-            UpdateLastSkillTime();
+        }
+        public void HandleEnemyDefeated(Enemy enemy)
+        {
+            Random rand = new Random();
+            string lootItem = enemy.Loot[rand.Next(enemy.Loot.Count)];
+            AddToInventory(lootItem);
+
+            Gold += enemy.GoldReward;
+            Console.WriteLine($"{enemy.Name} has been defeated!");
+
+            Console.WriteLine($"{enemy.DeathQuote()}");
+            Console.WriteLine($"{Name} found \"{lootItem}\" and gained {enemy.GoldReward} gold. Current gold: {Gold}.");
         }
 
     }
-
-
-
-
-
-
-
-     class Mage : Player
-     {
-            public int Mana = 50;
-            public int MaxMana = 50;
-            public int HealAmount = 15;
-            public int ManaCost = 10;
-            
-
-
-        public Mage(string name) : base(name, "Mage", 80, 80, 20, 30) { }
-            
-        public override void Status()
-        {
-            base.Status();
-            Console.WriteLine($"Mana: {Mana}/{MaxMana}");
-        }
-        public override void Rest(Player player)
-        {
-            if (player.HP == player.MaxHP && Mana == MaxMana)
-            {
-                Console.WriteLine($"{player.Name} is already at full health and mana!");
-                return;
-            }
-            int restoredHP = 15;
-            int restoredMana = 10;
-            HP += restoredHP;
-            if(HP > MaxHP)
-            {  HP = MaxHP; }
-            Mana += restoredMana;
-            if(Mana > MaxMana)
-            {
-                Mana = MaxMana;
-            }
-            Console.WriteLine($"{player.Name} rested and restored {restoredHP} HP and {restoredMana} MP and now has {HP} HP, {Mana} MP");
-            Console.ReadKey();
-        }
-        public void Heal(Player target)
-        {
-            TimeSpan cooldown = DateTime.Now - LastSkillTime;
-            if (cooldown.TotalSeconds < SkillCooldown)
-            {
-                int remaining = SkillCooldown - (int)cooldown.TotalSeconds;
-                Console.WriteLine($"Heal is on cooldown. Please wait {remaining} seconds.");
-                return;
-            }
-            if (Mana < ManaCost)
-            {
-                Console.WriteLine("Not enough mana to heal.");
-                return;
-            }
-            if (target.HP >= target.MaxHP)
-            {
-
-                Console.WriteLine($"{target.Name} is already at full health!");
-                return;
-            }
-            int healAmount = Math.Min(HealAmount, target.MaxHP - target.HP);
-            target.HP += healAmount;
-            Mana -= ManaCost;
-            UpdateLastSkillTime();
-            Console.WriteLine($"{Name} heals {target.Name} for {healAmount} HP. {target.Name}'s HP is now {target.HP}/{target.MaxHP}. Mana left: {Mana}");
-        }
-
-     }
+  
 }
